@@ -90,3 +90,8 @@ a {
 #main #works .itemList li img {
   width: 100%;
 }
+
+.fancybox__caption a {
+  vertical-align: middle;
+  margin-left: 10px;
+}
