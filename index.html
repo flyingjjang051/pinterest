@@ -21,6 +21,7 @@
     <script src="js/greensock/gsap.min.js"></script>
     <script src="js/particles.min.js"></script>
     <script src="js/isotope.pkgd.min.js"></script>
+    <script src="js/lodash.js"></script>
     <script src="js/imagesloaded.pkgd.min.js"></script>
     <script src="js/fancybox.umd.js"></script>
   </head>
@@ -65,6 +66,8 @@
     const itemList = $("#works .itemList");
     const filterList = $("#filter li");
     let grid = null;
+
+    //grid.isotope({ filter: ".item", sortBy: "point", sortAscending: false });
     $.ajax({ url: "data/typo.json" }).done(function (response) {
       console.log(response.imageFolder);
       console.log(response.typoList);
@@ -73,10 +76,11 @@
       console.log("🚀 ~ file: index.html ~ line 72 ~ imageFolder", imageFolder);
       //forEach(function(item,idx){})
       let tempHtml = "";
+      const list = [];
       $.each(typoList, function (idx, item) {
         tempHtml += `<li class="item ${item.category}">
-            <a href="${imageFolder + item.img}" data-fancybox="${item.category}" 
-                                                data-caption="${item.title}  
+            <a href="${imageFolder + item.img}" data-fancybox="${item.category}"
+                                                data-caption="${item.title}
                                                 <a href='${item.link}' target='_blank'><span class='material-icons'>open_in_new</span></a>">
               <div class="img">
                 <img src="${imageFolder + item.img}" alt="" />
@@ -90,9 +94,11 @@
               </div>
             </a>
           </li>`;
+        //list.push(tempHtml);
       });
       console.log(tempHtml);
       //itemList.innerHtml = tempHtml;
+
       itemList.html(tempHtml);
       itemList.imagesLoaded().always(function () {
         grid = itemList.isotope({
@@ -103,8 +109,8 @@
             point: ".point .num parseFloat",
           },
         });
-        grid.isotope({ filter: ".item", sortBy: "point", sortAscending: false });
       });
+      console.log("1111");
     });
     filterList.on("click", function () {
       $(this).addClass("on").siblings().removeClass("on");
@@ -114,8 +120,40 @@
     });
     // 이벤트 위임  (delegation)
     $("body").on("click", ".fancybox__caption a", function () {
-      // console.log($(this).attr("href"));
-      // return false;
+      console.log($(this).attr("href"));
+      window.open($(this).attr("href"));
+      return false;
     });
+    const cursor = $(".cursor");
+    $(window).on(
+      "mousemove",
+      _.throttle(function (e) {
+        $("input[name='clientY']").val(e.clientY);
+        $("input[name='screenY']").val(e.screenY);
+        $("input[name='pageY']").val(e.pageY);
+        $("input[name='offsetY']").val(e.offsetY);
+        gsap.to(cursor, { left: e.clientX, top: e.clientY, duration: 0.2 });
+      }, 1000 / 60)
+    );
+    $(".itemList").on(
+      "mouseenter",
+      "li",
+      _.debounce(function () {
+        //console.log("나는 콘솔이 찍힐까요?");
+        cursor.find(".txt").text("CLICK");
+        gsap.killTweensOf(cursor);
+        gsap.to(cursor, { width: 100, height: 100, backgroundColor: "#f00", ease: "elastic", duration: 1 });
+      }, 100)
+    );
+    $(".itemList").on(
+      "mouseleave",
+      "li",
+      _.debounce(function () {
+        //console.log("나는 콘솔이 찍힐까요?");
+        cursor.find(".txt").text("");
+        gsap.killTweensOf(cursor);
+        gsap.to(cursor, { width: 20, height: 20, backgroundColor: "#fff", ease: "power4", duration: 0.25 });
+      }, 100)
+    );
   </script>
 </html>
