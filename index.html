@@ -24,7 +24,6 @@
     <script src="js/isotope.pkgd.min.js"></script>
     <script src="js/imagesloaded.pkgd.min.js"></script>
     <script src="js/fancybox.umd.js"></script>
-    <script src="js/main.js" defer></script>
   </head>
   <body>
     <header id="header">
@@ -32,7 +31,7 @@
     </header>
     <main id="main">
       <nav id="filter">
-        <h2 class="hidden">filtering menu</h2>
+        <h2 class="blind">filtering menu</h2>
         <ul>
           <li class="on" data-filter="item">ALL</li>
           <li data-filter="paint">PAINT</li>
@@ -41,22 +40,7 @@
         </ul>
       </nav>
       <div id="works">
-        <ul class="itemList">
-          <li class="item category">
-            <a href="title">
-              <div class="img">
-                <img src="" alt="" />
-              </div>
-              <div class="info">
-                <h2>title</h2>
-                <p class="desc">설명</p>
-                <p class="point">
-                  <span>점수</span>
-                </p>
-              </div>
-            </a>
-          </li>
-        </ul>
+        <ul class="itemList"></ul>
       </div>
     </main>
     <div class="cursor">
@@ -77,4 +61,51 @@
       </div>
     </div>
   </body>
+  <script>
+    //prettier-ignore
+    const itemList = $("#works .itemList");
+    const filterList = $("#filter li");
+    let grid = null;
+    $.ajax({ url: "data/typo.json" }).done(function (response) {
+      console.log(response.imageFolder);
+      console.log(response.typoList);
+      const typoList = response.typoList;
+      const imageFolder = response.imageFolder;
+      console.log("🚀 ~ file: index.html ~ line 72 ~ imageFolder", imageFolder);
+      //forEach(function(item,idx){})
+      let tempHtml = "";
+      $.each(typoList, function (idx, item) {
+        tempHtml += `<li class="item ${item.category}">
+            <a href="">
+              <div class="img">
+                <img src="${imageFolder + item.img}" alt="" />
+              </div>
+              <div class="info">
+                <h2>${item.title}</h2>
+                <p class="desc">${item.desc}</p>
+                <p class="point">
+                  <span>${item.point}</span>
+                </p>
+              </div>
+            </a>
+          </li>`;
+      });
+      console.log(tempHtml);
+      //itemList.innerHtml = tempHtml;
+      itemList.html(tempHtml);
+      itemList.imagesLoaded().always(function () {
+        grid = itemList.isotope({
+          itemSelector: ".item",
+          percentPosition: true,
+          layoutMode: "masonry",
+        });
+      });
+    });
+    filterList.on("click", function () {
+      $(this).addClass("on").siblings().removeClass("on");
+      console.log($(this).data("filter"));
+      const filter = $(this).data("filter");
+      grid.isotope({ filter: `.${filter}` });
+    });
+  </script>
 </html>
