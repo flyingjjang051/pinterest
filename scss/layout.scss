@@ -73,12 +73,17 @@ a {
       margin: auto;
       box-sizing: border-box;
       li {
-        width: calc(25% - 20px);
-        margin: 10px;
-        padding: 10px;
-        box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.5);
+        width: 25%;
         box-sizing: border-box;
-        background-color: #fff;
+        padding: 10px;
+        a {
+          width: 100%;
+          display: block;
+          box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.5);
+          box-sizing: border-box;
+          background-color: #fff;
+          padding: 10px;
+        }
         h2 {
           margin: 10px 0;
           font-size: 20px;
@@ -109,6 +114,9 @@ a {
     //color: #f00;
   }
 }
+.with-fancybox .cursor {
+  display: none;
+}
 .cursor {
   position: fixed;
   width: 20px;
@@ -116,8 +124,8 @@ a {
   background-color: rgba(255, 255, 255, 0.5);
   box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.2);
   border-radius: 1000px;
-  left: 100px;
-  top: 300px;
+  left: -100px;
+  top: -300px;
   transform: translate(-50%, -50%);
   z-index: 9999999;
   pointer-events: none;

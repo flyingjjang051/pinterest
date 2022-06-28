@@ -133,7 +133,7 @@
         $("input[name='pageY']").val(e.pageY);
         $("input[name='offsetY']").val(e.offsetY);
         gsap.to(cursor, { left: e.clientX, top: e.clientY, duration: 0.2 });
-      }, 1000 / 60)
+      }, 1000 / 48)
     );
     $(".itemList").on(
       "mouseenter",
